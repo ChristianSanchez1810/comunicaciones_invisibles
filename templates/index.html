@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunicaciones Invisibles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-dark text-light font-monospace">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                Comunicaciones Invisibles
+            </a>
+        </div>
+    </nav>
+
+    <main class="container my-5 flex-grow-1">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-warning border-warning bg-black text-warning text-center" role="alert">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="text-center mb-5">
+            <h1 class="fw-bold text-white">Cifrado Esteganográfico</h1>
+            <p class="text-secondary">Oculta datos en imágenes usando AES-256 + LSB</p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6">
+                <div class="card bg-black border-secondary shadow-lg h-100">
+                    <div class="card-header border-secondary text-center py-3">
+                        <h5 class="text-primary mb-0">Ocultar Mensaje</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="/" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="action" value="ocultar">
+
+                            <div class="mb-3">
+                                <label for="imgOriginal" class="form-label text-secondary small">1. Imagen Original
+                                    (PNG)</label>
+                                <input type="file" class="form-control bg-dark text-light border-secondary"
+                                    id="imgOriginal" name="imagen" accept=".png" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="txtMensaje" class="form-label text-secondary small">2. Mensaje
+                                    Secreto</label>
+                                <textarea class="form-control bg-dark text-light border-secondary" id="txtMensaje"
+                                    name="mensaje" rows="4" placeholder="Escribe aquí tu secreto..."
+                                    required></textarea>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="passEnc" class="form-label text-secondary small">3. Contraseña
+                                    (AES-256)</label>
+                                <input type="password" class="form-control bg-dark text-light border-secondary"
+                                    id="passEnc" name="password" placeholder="Define una clave segura" required>
+                            </div>
+
+                            <div class="d-grid mt-auto">
+                                <button type="submit" class="btn btn-outline-primary py-2 fw-bold">
+                                    Generar Imagen Segura
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card bg-black border-secondary shadow-lg h-100">
+                    <div class="card-header border-secondary text-center py-3">
+                        <h5 class="text-success mb-0">Revelar Mensaje</h5>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column">
+                        <form action="/" method="POST" enctype="multipart/form-data"
+                            class="flex-grow-1 d-flex flex-column">
+                            <input type="hidden" name="action" value="revelar">
+
+                            <div class="mb-3">
+                                <label for="imgStego" class="form-label text-secondary small">1. Imagen con Secreto
+                                    (PNG)</label>
+                                <input type="file" class="form-control bg-dark text-light border-secondary"
+                                    id="imgStego" name="imagen_stego" accept=".png" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="passDec" class="form-label text-secondary small">2. Contraseña
+                                    Original</label>
+                                <input type="password" class="form-control bg-dark text-light border-secondary"
+                                    id="passDec" name="password_reveal" placeholder="La misma que usaste al crearla"
+                                    required>
+                            </div>
+
+                            <div class="flex-grow-1"></div>
+
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-outline-success py-2 fw-bold">
+                                    Leer Mensaje Oculto
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-black text-center py-4 border-top border-secondary mt-auto">
+        <div class="container">
+            <small class="text-secondary">
+                Proyecto ITICS &copy; 2026 | Instituto Tecnológico de Tlalnepantla
+            </small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
