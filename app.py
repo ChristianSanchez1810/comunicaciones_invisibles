@@ -1,16 +1,71 @@
 import os
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for
+from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
+from models import db,User,Role,OperationLog
 
 from core.crypto import AESCipher
 from core.stego import encode, decode
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:@localhost/comunicaciones_seguras'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+with app.app_context():
+    db.create_all()
+    print("¡Tablas verificadas/creadas con éxito en MySQL!")
+    if not Role.query.first():
+        rol_free = Role(nombre='Free', max_peso_mb=2, max_operaciones_diarias=5)
+        rol_premium = Role(nombre='Premium', max_peso_mb=10, max_operaciones_diarias=50)
+        
+        db.session.add(rol_free)
+        db.session.add(rol_premium)
+        db.session.commit()
+        print("Roles 'Free' y 'Premium' inyectados en la base de datos.")
+
+    if not User.query.filter_by(username='christian').first():
+        admin_user = User(username='christian', email='ariel1810mytroo@gmail.com', role_id=2)
+        admin_user.set_password('Root1234!')
+        
+        db.session.add(admin_user)
+        db.session.commit()
+        print("Usuario administrador creado con éxito.")
+
 app.secret_key = "clave_super_secreta_para_sesion" 
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        if password != confirm_password:
+            flash('Las contraseñas no coinciden.', 'danger')
+            return redirect(url_for('registro'))
+
+        try:
+            rol_gratuito = Role.query.filter_by(nombre='Free').first()
+            nuevo_usuario = User(username=username, email=email, role_id=rol_gratuito.id)
+            nuevo_usuario.set_password(password)
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            
+            flash('¡Registro exitoso! Ya puedes iniciar sesión.', 'success')
+            return redirect(url_for('registro')) 
+
+        except ValueError as e:
+            db.session.rollback()
+            flash(str(e), 'warning')
+            
+        except IntegrityError:
+            db.session.rollback()
+            flash('El nombre de usuario o correo ya están registrados.', 'danger')
+    return render_template('registro.html')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
