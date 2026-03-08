@@ -1,81 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro | Comunicaciones Invisibles</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-
-<body>
-
-    <div class="navbar">
-        <div class="logo">
-            <a href="inicio.html"> <img src="/logo2.png" style="width: 180px; height: 60px;" alt="Logo"></a>
-        </div>
-
-        <button class="menu-toggle" id="btn-menu">
-            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-
-        <nav>
-            <div class="nav-links" id="menu-links">
-                <a href="index.html">Inicio</a>
-                <a href="ocultar.html">Ocultar</a>
-                <a href="revelar.html">Revelar</a>
-                <a href="login.html">Login</a>
-            </div>
-        </nav>
-    </div>
-
-    <!-- SECCIÓN REGISTRO -->
-    <!-- Usamos las clases correctas: auth-container y auth-card -->
-    <div class="auth-container">
-        <div class="auth-card">
-
-            <h2>Crear Cuenta</h2>
-
-            <form>
-                <input type="text" placeholder="Nombre completo" required>
-                <input type="email" placeholder="Correo electrónico" required>
-                
-                <!-- Contenedor relativo para el input de contraseña y el botón del ojo -->
-                <div style="position: relative; margin-bottom: 20px;">
-                    <input type="password" id="pass-registro" placeholder="Contraseña" required style="margin-bottom: 0; padding-right: 45px;">
-                    <button type="button" onclick="mostrarPassword('pass-registro', this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #94A3B8; padding: 0;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </button>
-                </div>
-
-                <button type="submit" class="auth-btn">
-                    Registrarse
-                </button>
-            </form>
-
-            <div class="auth-link">
-                ¿Ya tienes cuenta?
-                <a href="login.html">Inicia sesión</a>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer style="text-align: center; padding: 30px 20px; color: #64748B; font-size: 14px; position: relative; z-index: 10;">
-        Proyecto ITICS © 2026 | Instituto Tecnológico de Tlalnepantla
-    </footer>
-
-    <!-- CANVAS FONDO -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- SCRIPTS ORDENADOS -->
-    <script>
-        /*LÓGICA PARA MOSTRAR/OCULTAR CONTRASEÑA*/
-        function mostrarPassword(id, btn){
+function mostrarPassword(id, btn){
             const campo = document.getElementById(id);
             if (campo) {
                 if (campo.type === "password") {
@@ -201,6 +124,3 @@
 
         init();
         animate();
-    </script>
-</body>
-</html>

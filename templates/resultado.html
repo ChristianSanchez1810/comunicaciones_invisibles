@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mensaje Revelado | Comunicaciones Invisibles</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+    <div class="logo">
+        <img src="imagenes/logo2.png" style="width: 200px; height: 70px;">
+        </div>
+    </div>
+<nav>
+    <div class="nav-links">
+        <a href="/inicio.html">Inicio</a>
+        <a href="/ocultar.html">Ocultar</a>
+        <a href="/revelar.html">Revelar</a>
+    </div>
+    </nav>
+</div>
+
+<!-- RESULTADO -->
+
+<section class="section result-container">
+
+    <div class="result-box">
+
+        <h2 class="result-title">
+            🔓 <span class="gradient-text">Mensaje Descifrado</span>
+        </h2>
+
+        <div class="secret-container">
+            <p class="text-muted">El contenido oculto es:</p>
+            <div class="secret-text">
+                {{ mensaje }}
+            </div>
+        </div>
+
+        <a href="/" class="btn btn-purple">
+            Volver al Inicio
+        </a>
+
+    </div>
+
+</section>
+
+</body>
+</html>

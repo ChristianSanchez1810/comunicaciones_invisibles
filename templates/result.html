@@ -4,24 +4,20 @@
     <meta charset="UTF-8">
     <title>Mensaje Revelado</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #121212; color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .result-box { background-color: #1e1e1e; border: 1px solid #28a745; padding: 40px; border-radius: 10px; max-width: 600px; width: 100%; text-align: center; }
-        .secret-text { color: black; font-family: 'Courier New', monospace; font-size: 1.5rem; word-wrap: break-word; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="body-resultado">
 
-    <div class="result-box shadow-lg">
-        <h2 class="mb-4">¡Mensaje Descifrado!</h2>
+    <div class="result-box mx-auto mt-5">
+        <h2 class="mb-4 resultado-titulo">🔓 ¡Mensaje Descifrado!</h2>
         
-        <div class="alert alert-dark">
+        <div class="alert resultado-alerta">
             <p class="mb-0 text-muted">El contenido oculto es:</p>
-            <hr>
+            <hr class="resultado-hr">
             <p class="secret-text">{{ mensaje }}</p>
         </div>
 
-        <a href="/" class="btn btn-outline-light mt-4">Volver al Inicio</a>
+        <a href="/" class="btn mt-4 btn-resultado">Volver al Inicio</a>
     </div>
 
 </body>

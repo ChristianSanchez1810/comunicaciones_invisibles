@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Comunicaciones Invisibles{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('index') }}"> 
+                <img src="{{ url_for('static', filename='img/logo2.png') }}" style="width: 200px; height: 70px;" alt="Logo">
+            </a>
+        </div>
+        
+        <button class="menu-toggle" id="btn-menu">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+
+        <nav>
+            <div class="nav-links" id="menu-links">
+                <a href="{{ url_for('index') }}">Inicio</a>
+                <a href="{{ url_for('login') }}">Login</a> 
+            </div>
+        </nav>
+    </div>
+
+    <section class="section" style="position: relative; z-index: 10;">
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flask-alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+
+    </section>
+
+    <footer style="text-align: center; padding: 30px 20px; color: #64748B; font-size: 14px; position: relative; z-index: 10;">
+        Proyecto ITICS &copy; 2026 | Instituto Tecnológico de Tlalnepantla
+    </footer>
+
+    <canvas id="bg-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
+</body>
+</html>

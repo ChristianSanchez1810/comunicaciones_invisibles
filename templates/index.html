@@ -1,130 +1,118 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comunicaciones Invisibles</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+{% block title %}Inicio | Comunicaciones Invisibles{% endblock %}
 
-<body class="d-flex flex-column min-vh-100 bg-dark text-light font-monospace">
+{% block content %}
+    <section class="hero" style="position: relative; z-index: 10;">
+        <h1>Protege tus <span class="gradient-text">Secretos</span> a plena vista</h1>
+        <p>
+            Oculta información confidencial dentro de imágenes usando técnicas avanzadas de esteganografía.
+        </p>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-black border-bottom border-secondary">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                Comunicaciones Invisibles
-            </a>
-        </div>
-    </nav>
+        <a href="{{ url_for('ocultar') }}" class="btn btn-blue">Ocultar un Mensaje</a>
+        <a href="{{ url_for('revelar') }}" class="btn btn-purple">Revelar un Mensaje</a>
+    </section>
 
-    <main class="container my-5 flex-grow-1">
+    <section class="carousel-section">
+        <h2 class="titulo-seccion">El Poder de la <span class="gradient-text">Esteganografía</span></h2>
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="alert alert-warning border-warning bg-black text-warning text-center" role="alert">
-            {{ messages[0] }}
-        </div>
-        {% endif %}
-        {% endwith %}
-
-        <div class="text-center mb-5">
-            <h1 class="fw-bold text-white">Cifrado Esteganográfico</h1>
-            <p class="text-secondary">Oculta datos en imágenes usando AES-256 + LSB</p>
-        </div>
-
-        <div class="row g-4">
-
-            <div class="col-md-6">
-                <div class="card bg-black border-secondary shadow-lg h-100">
-                    <div class="card-header border-secondary text-center py-3">
-                        <h5 class="text-primary mb-0">Ocultar Mensaje</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <form action="/" method="POST" enctype="multipart/form-data">
-                            <input type="hidden" name="action" value="ocultar">
-
-                            <div class="mb-3">
-                                <label for="imgOriginal" class="form-label text-secondary small">1. Imagen Original
-                                    (PNG)</label>
-                                <input type="file" class="form-control bg-dark text-light border-secondary"
-                                    id="imgOriginal" name="imagen" accept=".png" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="txtMensaje" class="form-label text-secondary small">2. Mensaje
-                                    Secreto</label>
-                                <textarea class="form-control bg-dark text-light border-secondary" id="txtMensaje"
-                                    name="mensaje" rows="4" placeholder="Escribe aquí tu secreto..."
-                                    required></textarea>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="passEnc" class="form-label text-secondary small">3. Contraseña
-                                    (AES-256)</label>
-                                <input type="password" class="form-control bg-dark text-light border-secondary"
-                                    id="passEnc" name="password" placeholder="Define una clave segura" required>
-                            </div>
-
-                            <div class="d-grid mt-auto">
-                                <button type="submit" class="btn btn-outline-primary py-2 fw-bold">
-                                    Generar Imagen Segura
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+        <div class="slider-container" id="slider">
+            <div class="carousel-card" onclick="seleccionarTarjeta(0)">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 </div>
+                <h3>Cifrado AES-256</h3>
+                <p>Blindamos tu mensaje con encriptación de grado militar. Sin la clave correcta, los datos son indescifrables.</p>
             </div>
 
-            <div class="col-md-6">
-                <div class="card bg-black border-secondary shadow-lg h-100">
-                    <div class="card-header border-secondary text-center py-3">
-                        <h5 class="text-success mb-0">Revelar Mensaje</h5>
-                    </div>
-                    <div class="card-body p-4 d-flex flex-column">
-                        <form action="/" method="POST" enctype="multipart/form-data"
-                            class="flex-grow-1 d-flex flex-column">
-                            <input type="hidden" name="action" value="revelar">
-
-                            <div class="mb-3">
-                                <label for="imgStego" class="form-label text-secondary small">1. Imagen con Secreto
-                                    (PNG)</label>
-                                <input type="file" class="form-control bg-dark text-light border-secondary"
-                                    id="imgStego" name="imagen_stego" accept=".png" required>
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="passDec" class="form-label text-secondary small">2. Contraseña
-                                    Original</label>
-                                <input type="password" class="form-control bg-dark text-light border-secondary"
-                                    id="passDec" name="password_reveal" placeholder="La misma que usaste al crearla"
-                                    required>
-                            </div>
-
-                            <div class="flex-grow-1"></div>
-
-                            <div class="d-grid mt-4">
-                                <button type="submit" class="btn btn-outline-success py-2 fw-bold">
-                                    Leer Mensaje Oculto
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+            <div class="carousel-card" onclick="seleccionarTarjeta(1)">
+                <div class="card-icon" style="color: #00A8FF;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 </div>
+                <h3>Inyección LSB</h3>
+                <p>Alteramos los bits menos significativos (LSB) para incrustar tus datos sin alterar la apariencia visual.</p>
             </div>
 
+            <div class="carousel-card" onclick="seleccionarTarjeta(2)">
+                <div class="card-icon" style="color: #A259FF;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <h3>Extracción Segura</h3>
+                <p>Sube la imagen portadora, ingresa tu clave y nuestro algoritmo reconstruirá el mensaje original al instante.</p>
+            </div>
+
+            <div class="carousel-card" onclick="seleccionarTarjeta(3)">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3>Completamente Invisible</h3>
+                <p>Ni el ojo humano ni el análisis visual básico podrán detectar que la imagen contiene información oculta.</p>
+            </div>
         </div>
-    </main>
 
-    <footer class="bg-black text-center py-4 border-top border-secondary mt-auto">
-        <div class="container">
-            <small class="text-secondary">
-                Proyecto ITICS &copy; 2026 | Instituto Tecnológico de Tlalnepantla
-            </small>
+        <div class="controles">
+            <button class="btn-control" onclick="mover(-1)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="btn-control" onclick="mover(1)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
         </div>
-    </footer>
+    </section>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        const tarjetas = document.querySelectorAll('.carousel-card');
+        let activa = 0; 
 
-</html>
+        if(tarjetas.length === 0) return;
+
+        function actualizarCarrusel() {
+            let contador = 0;
+            
+            let esCelular = window.innerWidth < 850;
+            let offset = esCelular ? 90 : 140; 
+            let scaleFactor = esCelular ? 0.15 : 0.2;
+
+            tarjetas[activa].style.transform = `none`;
+            tarjetas[activa].style.zIndex = 10;
+            tarjetas[activa].style.filter = 'none';
+            tarjetas[activa].style.opacity = 1;
+
+            for(let i = activa + 1; i < tarjetas.length; i++){
+                contador++;
+                tarjetas[i].style.transform = `translateX(${offset * contador}px) scale(${1 - scaleFactor * contador}) perspective(1000px) rotateY(-15deg)`;
+                tarjetas[i].style.zIndex = 10 - contador;
+                tarjetas[i].style.filter = 'blur(4px)';
+                tarjetas[i].style.opacity = contador > 2 ? 0 : 0.6;
+            }
+
+            contador = 0;
+
+            for(let i = activa - 1; i >= 0; i--){
+                contador++;
+                tarjetas[i].style.transform = `translateX(${-offset * contador}px) scale(${1 - scaleFactor * contador}) perspective(1000px) rotateY(15deg)`;
+                tarjetas[i].style.zIndex = 10 - contador;
+                tarjetas[i].style.filter = 'blur(4px)';
+                tarjetas[i].style.opacity = contador > 2 ? 0 : 0.6;
+            }
+        }
+        window.mover = function(direccion) {
+            activa = activa + direccion;
+            if(activa >= tarjetas.length) activa = tarjetas.length - 1;
+            if(activa < 0) activa = 0;
+            actualizarCarrusel();
+        };
+
+        window.seleccionarTarjeta = function(indice) {
+            activa = indice;
+            actualizarCarrusel();
+        };
+        actualizarCarrusel();
+        window.addEventListener('resize', actualizarCarrusel);
+    });
+</script>
+{% endblock %}

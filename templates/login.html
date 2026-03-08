@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Comunicaciones Invisibles{% endblock %}
+
+{% block content %}
+<div class="auth-container" style="position: relative; z-index: 10;">
+    <div class="auth-card">
+
+        <h2>Iniciar Sesión</h2>
+
+        <form action="{{ url_for('login') }}" method="POST">
+            
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+
+            <input type="password" name="password" id="pass-login" placeholder="Contraseña" required>
+
+            <button type="submit" class="auth-btn">
+                Ingresar
+            </button>
+        </form>
+
+        <div class="auth-link">
+            ¿No tienes cuenta?
+            <a href="{{ url_for('registro') }}">Regístrate aquí</a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function mostrarPassword(id){
+        const campo = document.getElementById(id);
+        if (campo) {
+            campo.type = campo.type === "password" ? "text" : "password";
+        }
+    }
+</script>
+{% endblock %}
