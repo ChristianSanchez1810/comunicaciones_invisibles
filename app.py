@@ -1,12 +1,23 @@
 import os
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for, session
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
-from models import db, User, Role, OperationLog
+from werkzeug.exceptions import RequestEntityTooLarge
+from models import db, User, OperationLog
 from core.crypto import AESCipher
 from core.stego import encode, decode
 
+
 app = Flask(__name__)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
 
 # CONFIGURACIÓN DE BASE DE DATOS 
 
@@ -17,28 +28,27 @@ app.secret_key = "clave_super_secreta_para_sesion"
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024
 
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
     print("¡Tablas verificadas/creadas con éxito en MySQL!")
-    
-    if not Role.query.first():
-        rol_free = Role(nombre='Free', max_peso_mb=2, max_operaciones_diarias=5)
-        rol_premium = Role(nombre='Premium', max_peso_mb=10, max_operaciones_diarias=50)
-        db.session.add(rol_free)
-        db.session.add(rol_premium)
-        db.session.commit()
-        print("Roles 'Free' y 'Premium' inyectados.")
 
-    if not User.query.filter_by(username='christian').first():
-        admin_user = User(username='christian', email='ariel1810mytroo@gmail.com', role_id=2)
+    if not User.query.filter_by(username='Christian').first():
+        admin_user = User(username='Christian', email='ariel1810mytroo@gmail.com')
         admin_user.set_password('Root1234!')
         db.session.add(admin_user)
         db.session.commit()
-        print("Usuario administrador creado con éxito.")
+        print("Usuario Christian creado con éxito.")
 
+    if not User.query.filter_by(username='Itcia').first():
+        itcia_user = User(username='Itcia', email='itcia@gmail.com')
+        itcia_user.set_password('Admin1234')
+        db.session.add(itcia_user)
+        db.session.commit()
+        print("Usuario de Itcia creado con éxito.")
 
 # RUTAS PÚBLICAS
 
@@ -59,8 +69,7 @@ def registro():
             return redirect(url_for('registro'))
 
         try:
-            rol_gratuito = Role.query.filter_by(nombre='Free').first()
-            nuevo_usuario = User(username=username, email=email, role_id=rol_gratuito.id)
+            nuevo_usuario = User(username=username, email=email)
             nuevo_usuario.set_password(password)
             db.session.add(nuevo_usuario)
             db.session.commit()
@@ -92,8 +101,6 @@ def login():
         if user and user.check_password(password):
             session['user_id'] = user.id
             session['username'] = user.username
-            session['role_id'] = user.role_id
-            
             flash(f'¡Bienvenido, {user.username}!', 'success')
             return redirect(url_for('index'))
         else:
@@ -111,6 +118,7 @@ def logout():
 # RUTAS PRIVADAS
 
 @app.route('/ocultar', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def ocultar():
     if 'user_id' not in session:
         flash('Acceso denegado. Debes iniciar sesión para ocultar mensajes.', 'warning')
@@ -121,6 +129,7 @@ def ocultar():
     return render_template('ocultar.html')
 
 @app.route('/revelar', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def revelar():
     if 'user_id' not in session:
         flash('Acceso denegado. Debes iniciar sesión para revelar mensajes.', 'warning')
@@ -192,3 +201,9 @@ def procesar_revelado(req):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+@app.errorhandler(RequestEntityTooLarge)
+def handle_file_size_error(e):
+    flash('Seguridad: El archivo excede el límite permitido de 5 MB.', 'danger')
+    return redirect(request.referrer or url_for('index'))
