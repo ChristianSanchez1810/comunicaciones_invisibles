@@ -206,6 +206,17 @@ input[type="file"] {
     text-overflow: ellipsis;
 }
 
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+}
+
 textarea{
     resize:none;
     height:120px;
@@ -696,4 +707,5 @@ Botón Copiar */
     box-shadow: 0 10px 20px rgba(123, 47, 247, 0.2);
     color: white;
 }
+
 
